@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+  # Frontend service
   frontend:
     build:
       context: ./frontend
@@ -9,3 +10,66 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/usr/src/app
+
+  # PostgreSQL Database Service
+  postgres:
+    image: postgres
+    hostname: postgreshost
+    env_file:
+      - .env  # Load environment variables from .env file
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"  # Expose PostgreSQL on the specified port
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistent storage for the database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s  
+
+  # pgAdmin Service
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - .env  # Load environment variables from .env file
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - POSTGRES_HOST=postgreshost  # Ensure pgAdmin knows where PostgreSQL is running
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${PGADMIN_PORT}:80"  # Expose pgAdmin on the specified port
+    depends_on:
+      postgres:
+        condition: service_healthy  # pgAdmin will wait for PostgreSQL to be healthy
+    user: root
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin  # Persistent storage for pgAdmin data
+      - ./entrypoint.sh:/entrypoint_custom.sh  # Custom entrypoint, ensure this script exists
+    entrypoint: sh /entrypoint_custom.sh  # Make sure the script is available
+  db_set:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - DB_HOST=postgreshost
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./database:/app
+    command: python db-setup.py
+
+volumes:
+  postgres_data:  # Persistent volume for PostgreSQL
+  pgadmin_data:  # Persistent volume for pgAdmin
