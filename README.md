@@ -18,7 +18,7 @@ The **Personal Finance App** is a web application designed to help users effecti
 - **Material-UI**: A React UI framework for creating responsive and aesthetically pleasing components.
 - **Chart.js**: A library for rendering charts and visual data representations.
 
-  Attached below is my Frontend
+  Attached below is my Frontend Design layout
 
 <img width="1680" alt="Screenshot 2024-09-28 at 22 09 25" src="https://github.com/user-attachments/assets/787cd80e-21c6-437d-a44e-44e3d44551e3">
 
