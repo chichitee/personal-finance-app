@@ -12,7 +12,7 @@ The **Personal Finance App** is a web application designed to help users effecti
 - **Visual Data Representation**: Pie charts to visualize income and expense breakdowns, enhancing understanding of financial allocations.
 - **Responsive Design**: Built with Material-UI to ensure a user-friendly experience across various devices.
 
-## Technologies Used
+## Technologies Used(Frontend)
 
 - **React**: A JavaScript library for building user interfaces.
 - **Material-UI**: A React UI framework for creating responsive and aesthetically pleasing components.
