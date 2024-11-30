@@ -5,14 +5,14 @@ The **Personal Finance App** is a web application designed to help users effecti
 > **Not
 ## Features
 
-Financial Summary: Displays total income, total expenses, and calculated savings.
-Budget Tracker: Users can add, view, and delete budget items, with a total budget displayed.
-Savings Goals: A dedicated section to track savings goals and milestones.
-Visual Data Representation: Pie charts to visualize income and expense breakdowns, enhancing understanding of financial allocations.
-Responsive Design: Built with Material-UI to ensure a user-friendly experience across various devices.
-Voice Recognition: Uses speech recognition to provide financial advice and insights based on trends.
-Trend Analysis and Financial Advice: Analyzes financial data and provides personalized recommendations based on income, expenses, and savings trends.
-e:** Currently, all development is taking place on the `main` branch.
+-**Financial Summary**: Displays total income, total expenses, and calculated savings.
+-**Budget Tracker**: Users can add, view, and delete budget items, with a total budget displayed.
+-**Savings Goals**: A dedicated section to track savings goals and milestones.
+-**Visual Data Representation**: Pie charts to visualize income and expense breakdowns, enhancing understanding of financial allocations.
+-**Responsive Design**: Built with Material-UI to ensure a user-friendly experience across various devices.
+-**Voice Recognition**: Uses speech recognition to provide financial advice and insights based on trends.
+-**Trend Analysis and Financial Advice**: Analyzes financial data and provides personalized recommendations based on income, expenses, and savings trends.
+** Currently, all development is taking place on the `main` branch.
 
 ## Technologies Used(Frontend)
 
