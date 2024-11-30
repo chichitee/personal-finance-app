@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Typography, Grid, Paper } from '@mui/material';
+import { Container, Typography, Grid, Paper, Button } from '@mui/material';
 import { Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -43,11 +43,42 @@ const FinancialSummary = () => {
     ],
   };
 
+  // Function to read out the financial summary using speech synthesis
+  const readFinancialSummary = () => {
+    const message = `
+      Your total income is R${totalIncome.toFixed(2)}. 
+      Your total expenses are R${totalExpenses.toFixed(2)}. 
+      You have saved R${savings.toFixed(2)}. 
+      Your expense breakdown includes: 
+      Rent: R${expenseBreakdown[0].amount.toFixed(2)}, 
+      Groceries: R${expenseBreakdown[1].amount.toFixed(2)}, 
+      Utilities: R${expenseBreakdown[2].amount.toFixed(2)}, 
+      Entertainment: R${expenseBreakdown[3].amount.toFixed(2)}.
+    `;
+
+    const utterance = new SpeechSynthesisUtterance(message);
+    window.speechSynthesis.speak(utterance);
+  };
+
   return (
     <Container>
+      {/* Button to trigger voice reading at the top */}
+      <Grid container spacing={3} sx={{ mt: 3 }}>
+        <Grid item xs={12}>
+          <Button 
+            variant="contained" 
+            sx={{ backgroundColor: '#ff66b2', color: '#fff' }} 
+            onClick={readFinancialSummary}
+          >
+            Hear Financial Summary
+          </Button>
+        </Grid>
+      </Grid>
+
       <Typography variant="h4" sx={{ color: '#ff66b2', mt: 3 }}>
         Financial Summary
       </Typography>
+
       <Grid container spacing={3} sx={{ mt: 3 }}>
         <Grid item xs={12} sm={6} md={4}>
           <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
@@ -68,6 +99,7 @@ const FinancialSummary = () => {
           </Paper>
         </Grid>
       </Grid>
+
       <Grid container spacing={3} sx={{ mt: 3 }}>
         <Grid item xs={12}>
           <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
@@ -77,6 +109,7 @@ const FinancialSummary = () => {
           </Paper>
         </Grid>
       </Grid>
+
       <Grid container spacing={3} sx={{ mt: 3 }}>
         <Grid item xs={12}>
           <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>

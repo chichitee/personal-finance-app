@@ -7,7 +7,7 @@ const Navbar = () => {
     <AppBar position="static" sx={{ backgroundColor: '#ff66b2' }}>
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Personal Finance App
+        Accessible Fintech App
         </Typography>
         <Button component={Link} to="/" color="inherit">Dashboard</Button>
         <Button component={Link} to="/income-expense" color="inherit">Income/Expense</Button>
