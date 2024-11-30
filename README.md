@@ -2,15 +2,17 @@
 
 The **Personal Finance App** is a web application designed to help users effectively manage their financial health. The app allows users to track their income, expenses, savings goals, and provides visual insights into their financial status through charts and summaries.
 
-> **Note:** Currently, all development is taking place on the `main` branch.
-
+> **Not
 ## Features
 
-- **Financial Summary**: Displays total income, total expenses, and calculated savings.
-- **Budget Tracker**: Users can add, view, and delete budget items, with a total budget displayed.
-- **Savings Goals**: A dedicated section to track savings goals and milestones.
-- **Visual Data Representation**: Pie charts to visualize income and expense breakdowns, enhancing understanding of financial allocations.
-- **Responsive Design**: Built with Material-UI to ensure a user-friendly experience across various devices.
+Financial Summary: Displays total income, total expenses, and calculated savings.
+Budget Tracker: Users can add, view, and delete budget items, with a total budget displayed.
+Savings Goals: A dedicated section to track savings goals and milestones.
+Visual Data Representation: Pie charts to visualize income and expense breakdowns, enhancing understanding of financial allocations.
+Responsive Design: Built with Material-UI to ensure a user-friendly experience across various devices.
+Voice Recognition: Uses speech recognition to provide financial advice and insights based on trends.
+Trend Analysis and Financial Advice: Analyzes financial data and provides personalized recommendations based on income, expenses, and savings trends.
+e:** Currently, all development is taking place on the `main` branch.
 
 ## Technologies Used(Frontend)
 
