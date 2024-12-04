@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Button, Container } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Navbar from './Navbar';
 import Dashboard from './Dashboard';
@@ -44,13 +44,58 @@ const darkTheme = createTheme({
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);  // State for toggling themes
+  const [isListening, setIsListening] = useState(false);  // State for managing voice listening
 
   const handleThemeToggle = () => {
     setIsDarkMode(!isDarkMode);  // Toggle dark/light mode
   };
 
+  // Initialize SpeechRecognition API
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+
+  recognition.continuous = true;  // Allow continuous listening
+  recognition.interimResults = false;  // Get final results only
+
+  const startListening = () => {
+    recognition.start();
+    setIsListening(true);
+  };
+
+  const stopListening = () => {
+    recognition.stop();
+    setIsListening(false);
+  };
+
+  // Handle speech results
+  useEffect(() => {
+    recognition.onresult = (event) => {
+      const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
+      if (transcript.includes('go to income') || transcript.includes('income tracker')) {
+        window.location.href = '/income-expense';  // Redirect to Income & Expense Tracker
+      } else if (transcript.includes('go to expenses') || transcript.includes('expense tracker')) {
+        window.location.href = '/income-expense';  // Redirect to Expense Tracker
+      } else if (transcript.includes('go to budget') || transcript.includes('budget tracker')) {
+        window.location.href = '/budget';  // Redirect to Budget Tracker
+      } else if (transcript.includes('go to savings') || transcript.includes('savings goals')) {
+        window.location.href = '/savings';  // Redirect to Savings Goals
+      } else if (transcript.includes('go to summary') || transcript.includes('financial summary')) {
+        window.location.href = '/summary';  // Redirect to Financial Summary
+      } else if (transcript.includes('go back home') || transcript.includes('dashboard')) {
+        window.location.href = '/';  // Redirect to Dashboard/Home
+      } else if (transcript.includes('toggle theme') || transcript.includes('change theme')) {
+        handleThemeToggle();  // Toggle the theme
+      } else {
+        alert('Command not recognized. Please try again.');
+      }
+    };
+
+    return () => {
+      recognition.onresult = null;  // Cleanup
+    };
+  }, []);
+
   return (
-    // Wrap the entire app with ThemeProvider to apply the theme globally
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <Router>
         {/* Navbar and toggle button for switching themes */}
@@ -62,6 +107,16 @@ const App = () => {
           style={{ margin: '20px' }}
         >
           Toggle Dark/Light Mode
+        </Button>
+
+        {/* Button to toggle voice listening */}
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={isListening ? stopListening : startListening}
+          style={{ margin: '20px' }}
+        >
+          {isListening ? 'Stop Listening' : 'Start Listening'}
         </Button>
 
         {/* Main container with dynamic background */}

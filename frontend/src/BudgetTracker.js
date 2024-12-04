@@ -9,6 +9,7 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
+  Paper,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -37,46 +38,58 @@ const BudgetTracker = () => {
 
   return (
     <Container>
-      <Typography variant="h4" sx={{ color: '#ff66b2', mt: 3 }}>
-        Budget Tracker
-      </Typography>
-      <TextField
-        label="Item Name"
-        value={itemName}
-        onChange={(e) => setItemName(e.target.value)}
-        sx={{ mt: 2, mr: 1 }}
-      />
-      <TextField
-        label="Amount"
-        type="number"
-        value={itemAmount}
-        onChange={(e) => setItemAmount(e.target.value)}
-        sx={{ mt: 2, mr: 1 }}
-      />
-      <Button
-        variant="contained"
-        sx={{ backgroundColor: '#ff66b2', color: '#fff', mt: 2 }}
-        onClick={handleAddItem}
-      >
-        Add Item
-      </Button>
+      <Paper sx={{ padding: 3, backgroundColor: '#f3e5f5', borderRadius: 3 }}>
+        <Typography variant="h4" sx={{ color: '#ff66b2', mt: 3, textAlign: 'center' }}>
+          Budget Tracker
+        </Typography>
+        
+        <TextField
+          label="Item Name"
+          value={itemName}
+          onChange={(e) => setItemName(e.target.value)}
+          sx={{ mt: 2, mr: 1, width: '45%' }}
+        />
+        
+        <TextField
+          label="Amount"
+          type="number"
+          value={itemAmount}
+          onChange={(e) => setItemAmount(e.target.value)}
+          sx={{ mt: 2, mr: 1, width: '45%' }}
+        />
+        
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: '#ff66b2',
+            color: '#fff',
+            mt: 2,
+            '&:hover': {
+              backgroundColor: '#ff3385',
+            },
+          }}
+          onClick={handleAddItem}
+        >
+          Add Item
+        </Button>
 
-      <Typography variant="h6" sx={{ mt: 3 }}>
-        Total Budget: R{totalBudget.toFixed(2)}
-      </Typography>
+        <Typography variant="h6" sx={{ mt: 3, textAlign: 'center' }}>
+          Total Budget: R{totalBudget.toFixed(2)}
+        </Typography>
 
-      <List sx={{ mt: 2 }}>
-        {budgetItems.map((item, index) => (
-          <ListItem key={index}>
-            <ListItemText primary={`${item.name} - R${item.amount.toFixed(2)}`} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(index)}>
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
+        <List sx={{ mt: 2 }}>
+          {budgetItems.map((item, index) => (
+            <ListItem key={index}>
+              <ListItemText primary={`${item.name} - R${item.amount.toFixed(2)}`} />
+              <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(index)}>
+                  <DeleteIcon sx={{ color: '#ff66b2' }} />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
     </Container>
   );
 };
