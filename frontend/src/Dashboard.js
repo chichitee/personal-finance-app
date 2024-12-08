@@ -1,268 +1,227 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  Container, Paper, Grid, Typography, Box, Button, Table, TableBody,
-  TableCell, TableContainer, TableHead, TableRow, TextField
+  Container,
+  Paper,
+  Grid,
+  Typography,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
-import { Line } from 'react-chartjs-2';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { Line, Pie } from 'react-chartjs-2';
 import Papa from 'papaparse';
 import {
-  Chart as ChartJS, CategoryScale, LinearScale, PointElement,
-  LineElement, Title, Tooltip, Legend
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
 } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
 
 const Dashboard = () => {
-  const [csvData, setCsvData] = useState([]);
-  const [data, setData] = useState({
-    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-    datasets: [
-      {
-        label: 'Income',
-        data: [3000, 3200, 2800, 3500, 4000, 4500],
-        borderColor: '#ff66b2',
-        backgroundColor: 'rgba(255, 102, 178, 0.2)',
-        fill: true,
-      },
-      {
-        label: 'Expenses',
-        data: [1200, 1500, 1300, 1800, 1600, 1900],
-        borderColor: '#ff3366',
-        backgroundColor: 'rgba(255, 51, 102, 0.2)',
-        fill: true,
-      },
-    ],
-  });
-
-  const [searchQuery, setSearchQuery] = useState('');
+  const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
-  const transactions = [
-    { date: '2024-11-20', type: 'Income', amount: 1500 },
-    { date: '2024-11-22', type: 'Expense', amount: 300 },
-    { date: '2024-11-25', type: 'Income', amount: 2000 },
-    { date: '2024-11-27', type: 'Expense', amount: 400 },
-  ];
-
-  useEffect(() => {
-    setFilteredTransactions(
-      transactions.filter(
-        (transaction) =>
-          transaction.date.includes(searchQuery) ||
-          transaction.type.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
-  }, [searchQuery]);
-
-  const { transcript, listening, resetTranscript } = useSpeechRecognition();
-
-  const startListening = () => SpeechRecognition.startListening({ continuous: true });
-  const stopListening = () => {
-    SpeechRecognition.stopListening();
-    resetTranscript();
-  };
-
-  const giveFinancialAdvice = () => {
-    const incomeData = [3000, 3200, 2800, 3500, 4000, 4500];
-    const expensesData = [1200, 1500, 1300, 1800, 1600, 1900];
-
-    const latestIncomeChange = incomeData[incomeData.length - 1] - incomeData[incomeData.length - 2];
-    const latestExpenseChange = expensesData[expensesData.length - 1] - expensesData[expensesData.length - 2];
-    const latestSavingsChange = latestIncomeChange - latestExpenseChange;
-
-    let advice = 'Based on your recent financial trends: ';
-
-    if (latestIncomeChange > 0) {
-      advice += 'Your income has increased recently. Consider saving more of this extra income. ';
-    } else if (latestIncomeChange < 0) {
-      advice += 'Your income has dropped this month. Look for ways to boost earnings. ';
-    } else {
-      advice += 'Your income has remained steady. Consider looking for growth opportunities. ';
-    }
-
-    if (latestExpenseChange > 0) {
-      advice += 'Your expenses have gone up. Consider cutting back in non-essential areas. ';
-    } else if (latestExpenseChange < 0) {
-      advice += 'Your expenses have decreased, which is good. Keep focusing on savings. ';
-    } else {
-      advice += 'Your expenses are stable. Keep monitoring your spending habits. ';
-    }
-
-    if (latestSavingsChange > 0) {
-      advice += 'Your savings are growing. Great job! Consider long-term investment options. ';
-    } else if (latestSavingsChange < 0) {
-      advice += 'Your savings have decreased. Consider cutting back on unnecessary expenses to save more. ';
-    } else {
-      advice += 'Your savings are steady. Aim for gradual growth to ensure financial security. ';
-    }
-
-    const utterance = new SpeechSynthesisUtterance(advice);
-    window.speechSynthesis.speak(utterance);
-  };
-
-  useEffect(() => {
-    if (transcript.toLowerCase().includes('give advice')) {
-      giveFinancialAdvice();
-    }
-  }, [transcript]);
+  const [dateFilter, setDateFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       Papa.parse(file, {
-        complete: (result) => {
-          setCsvData(result.data);
-          analyzeCsvData(result.data);
-        },
         header: true,
+        skipEmptyLines: true,
+        complete: (result) => {
+          const parsedData = result.data.map((row) => ({
+            date: row.date,
+            type: row.type,
+            category: row.category,
+            amount: parseFloat(row.amount),
+            description: row.description, // Include description
+          }));
+          setTransactions(parsedData);
+          setFilteredTransactions(parsedData);
+        },
+        error: (error) => alert(`Error reading file: ${error.message}`),
       });
     }
   };
 
-  const analyzeCsvData = (data) => {
-    const income = data.filter(row => row.type === 'Income').map(row => parseFloat(row.amount));
-    const expenses = data.filter(row => row.type === 'Expense').map(row => parseFloat(row.amount));
+  const handleDateFilterChange = (event) => {
+    const filterDate = event.target.value;
+    setDateFilter(filterDate);
 
-    setData({
-      labels: data.map(row => row.date),
-      datasets: [
-        {
-          label: 'Income',
-          data: income,
-          borderColor: '#ff66b2',
-          backgroundColor: 'rgba(255, 102, 178, 0.2)',
-          fill: true,
-        },
-        {
-          label: 'Expenses',
-          data: expenses,
-          borderColor: '#ff3366',
-          backgroundColor: 'rgba(255, 51, 102, 0.2)',
-          fill: true,
-        },
-      ],
-    });
+    if (filterDate) {
+      setFilteredTransactions(transactions.filter((t) => t.date === filterDate));
+    } else {
+      setFilteredTransactions(transactions);
+    }
+  };
+
+  const handleCategoryFilterChange = (event) => {
+    const filterCategory = event.target.value;
+    setCategoryFilter(filterCategory);
+
+    if (filterCategory) {
+      setFilteredTransactions(transactions.filter((t) => t.category === filterCategory));
+    } else {
+      setFilteredTransactions(transactions);
+    }
   };
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" sx={{ color: '#ff66b2', textAlign: 'center', mb: 3 }}>
+      <Typography variant="h4" sx={{ color: '#8e44ad', textAlign: 'center', mb: 3 }}>
         Dashboard Overview
       </Typography>
-      <Grid container spacing={3} sx={{ mt: 3 }}>
-        {/* Income, Expenses, Savings Cards */}
-        {[
-          { label: 'Total Income', value: 'R3,000', change: '+12%' },
-          { label: 'Total Expenses', value: 'R1,200', change: '-8%' },
-          { label: 'Savings', value: 'R1,800', change: '+20%' },
-          { label: 'Upcoming Bills', value: 'R300', change: '+5%' },
-        ].map((card, idx) => (
-          <Grid item xs={12} sm={6} md={3} key={idx}>
-            <Paper
-              sx={{
-                padding: 3,
-                backgroundColor: '#ffe6f0',
-                '&:hover': { boxShadow: 6, transform: 'scale(1.05)' },
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              }}
-            >
-              <Typography variant="h6" sx={{ color: '#ff66b2' }}>{card.label}</Typography>
-              <Typography variant="h5">{card.value}</Typography>
-              <Typography variant="subtitle2" sx={{ color: card.change.startsWith('+') ? 'green' : 'red' }}>
-                {card.change}
-              </Typography>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
 
-
-      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+      {/* File Upload */}
+      <Box sx={{ my: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Typography variant="h6" sx={{ color: '#8e44ad' }}>Upload Transactions (CSV):</Typography>
         <Button
           variant="contained"
-          sx={{ backgroundColor: '#ff66b2', color: '#fff' }}
           component="label"
+          sx={{ backgroundColor: '#8e44ad', '&:hover': { backgroundColor: '#7a3d8b' } }}
         >
-          Upload CSV
-          <input
-            type="file"
-            accept=".csv"
-            hidden
-            onChange={handleFileUpload}
-          />
+          Upload File
+          <input type="file" accept=".csv" hidden onChange={handleFileUpload} />
         </Button>
       </Box>
 
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={12}>
-          <Paper sx={{ padding: 4, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h5" sx={{ color: '#ff66b2', mb: 2 }}>
-              Income & Expenses Trend
-            </Typography>
-            <Box sx={{ height: 400 }}> {/* Make the graph bigger by adjusting the height */}
-              <Line data={data} />
-            </Box>
-          </Paper>
+      {/* Date and Category Filter */}
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <FormControl fullWidth>
+            <InputLabel>Date</InputLabel>
+            <Select value={dateFilter} onChange={handleDateFilterChange}>
+              <MenuItem value="">All Dates</MenuItem>
+              {[...new Set(transactions.map((t) => t.date))].map((date) => (
+                <MenuItem key={date} value={date}>{date}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
-
-        <Grid item xs={12} md={12}>
-          <Paper sx={{ padding: 4 }}>
-            <Typography variant="h5" sx={{ color: '#ff66b2', mb: 2 }}>
-              Recent Transactions Log
-            </Typography>
-            <TextField
-              placeholder="Search transactions"
-              variant="outlined"
-              size="small"
-              sx={{ mb: 2, width: '100%' }}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell><strong>Date</strong></TableCell>
-                    <TableCell><strong>Type</strong></TableCell>
-                    <TableCell><strong>Amount</strong></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredTransactions.map((transaction, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{transaction.date}</TableCell>
-                      <TableCell>{transaction.type}</TableCell>
-                      <TableCell>{`R${transaction.amount}`}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Box sx={{ textAlign: 'center' }}>
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: '#ff66b2', color: '#fff', mr: 2 }}
-              onClick={startListening}
-              disabled={listening}
-            >
-              Start Listening
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: '#ff3366', color: '#fff' }}
-              onClick={stopListening}
-              disabled={!listening}
-            >
-              Stop Listening
-            </Button>
-          </Box>
-          <Typography sx={{ textAlign: 'center', mt: 2 }}>Transcript: {transcript}</Typography>
+        <Grid item xs={12} md={6}>
+          <FormControl fullWidth>
+            <InputLabel>Category</InputLabel>
+            <Select value={categoryFilter} onChange={handleCategoryFilterChange}>
+              <MenuItem value="">All Categories</MenuItem>
+              {[...new Set(transactions.map((t) => t.category))].map((category) => (
+                <MenuItem key={category} value={category}>{category}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
+
+      {/* Graph Section */}
+      <Grid container spacing={4} sx={{ mt: 4 }}>
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ padding: 4, backgroundColor: '#f0e5f7', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+            <Typography variant="h5" sx={{ color: '#8e44ad', mb: 2 }}>
+              Income & Expenses Trend
+            </Typography>
+            <Line
+              data={{
+                labels: filteredTransactions.map((t) => t.date),
+                datasets: [
+                  {
+                    label: 'Income',
+                    data: filteredTransactions.filter((t) => t.type === 'Income').map((t) => t.amount),
+                    borderColor: '#FF6347',
+                    fill: false,
+                    tension: 0.1,
+                  },
+                  {
+                    label: 'Expenses',
+                    data: filteredTransactions.filter((t) => t.type === 'Expense').map((t) => t.amount),
+                    borderColor: '#32CD32',
+                    fill: false,
+                    tension: 0.1,
+                  },
+                ],
+              }}
+            />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ padding: 4, backgroundColor: '#f0e5f7', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+            <Typography variant="h5" sx={{ color: '#8e44ad', mb: 2 }}>
+              Category Breakdown
+            </Typography>
+            <Pie
+              data={{
+                labels: filteredTransactions.map((t) => t.category),
+                datasets: [
+                  {
+                    label: 'Transaction Categories',
+                    data: filteredTransactions.reduce((acc, curr) => {
+                      const index = acc.labels.indexOf(curr.category);
+                      if (index === -1) {
+                        acc.labels.push(curr.category);
+                        acc.data.push(curr.amount);
+                      } else {
+                        acc.data[index] += curr.amount;
+                      }
+                      return acc;
+                    }, { labels: [], data: [] }).data,
+                    backgroundColor: ['#FF6347', '#FF1493', '#32CD32', '#FFD700'],
+                    hoverBackgroundColor: ['#FF7F50', '#FF69B4', '#98FB98', '#FFD700'],
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: function (tooltipItem) {
+                        const category = tooltipItem.label;
+                        const description = transactions.find((t) => t.category === category)?.description || '';
+                        return `${category}: ${tooltipItem.raw} (${description})`;
+                      },
+                    },
+                  },
+                },
+              }}
+            />
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* Transaction List */}
+      <Box sx={{ my: 4 }}>
+        <Typography variant="h6" sx={{ color: '#8e44ad', mb: 2 }}>
+          All Transactions
+        </Typography>
+        <Paper sx={{ padding: 2, backgroundColor: '#f0e5f7', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+          {filteredTransactions.length > 0 ? (
+            <Grid container spacing={2}>
+              {filteredTransactions.map((transaction, index) => (
+                <Grid item xs={12} key={index}>
+                  <Typography variant="body1" sx={{ color: '#8e44ad' }}>
+                    {transaction.date} - {transaction.type} - {transaction.category} - ${transaction.amount.toFixed(2)} ({transaction.description})
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Typography variant="body2" sx={{ color: '#8e44ad' }}>No transactions found.</Typography>
+          )}
+        </Paper>
+      </Box>
     </Container>
   );
 };

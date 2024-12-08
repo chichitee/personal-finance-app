@@ -44,17 +44,17 @@ const IncomeExpenseTracker = () => {
 
   return (
     <Container>
-      <Typography variant="h4" sx={{ color: '#ff66b2', mt: 3 }}>
+      <Typography variant="h4" sx={{ color: '#8e44ad', mt: 3 }}>
         Income & Expense Tracker
       </Typography>
-      <Typography variant="subtitle1" sx={{ color: savings > 0 ? 'green' : 'red', mb: 3 }}>
+      <Typography variant="subtitle1" sx={{ color: savings > 0 ? '#27ae60' : '#e74c3c', mb: 3 }}>
         {message}
       </Typography>
 
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h6" sx={{ color: '#ff66b2' }}>Add Income</Typography>
+          <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7' }}>
+            <Typography variant="h6" sx={{ color: '#8e44ad' }}>Add Income</Typography>
             <form onSubmit={handleIncomeSubmit}>
               <TextField
                 label="Description"
@@ -86,17 +86,17 @@ const IncomeExpenseTracker = () => {
                 <MenuItem value="Bonus">Bonus</MenuItem>
                 <MenuItem value="Other">Other</MenuItem>
               </TextField>
-              <Button type="submit" variant="contained" sx={{ backgroundColor: '#ff66b2' }}>
+              <Button type="submit" variant="contained" sx={{ backgroundColor: '#8e44ad', '&:hover': { backgroundColor: '#9b59b6' } }}>
                 Add Income
               </Button>
             </form>
-            <Typography variant="h6" sx={{ color: '#ff66b2', mt: 3 }}>Total Income: R{totalIncome.toFixed(2)}</Typography>
+            <Typography variant="h6" sx={{ color: '#8e44ad', mt: 3 }}>Total Income: R{totalIncome.toFixed(2)}</Typography>
           </Paper>
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h6" sx={{ color: '#ff66b2' }}>Add Expense</Typography>
+          <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7' }}>
+            <Typography variant="h6" sx={{ color: '#8e44ad' }}>Add Expense</Typography>
             <form onSubmit={handleExpenseSubmit}>
               <TextField
                 label="Description"
@@ -128,19 +128,19 @@ const IncomeExpenseTracker = () => {
                 <MenuItem value="Entertainment">Entertainment</MenuItem>
                 <MenuItem value="Other">Other</MenuItem>
               </TextField>
-              <Button type="submit" variant="contained" sx={{ backgroundColor: '#ff66b2' }}>
+              <Button type="submit" variant="contained" sx={{ backgroundColor: '#8e44ad', '&:hover': { backgroundColor: '#9b59b6' } }}>
                 Add Expense
               </Button>
             </form>
-            <Typography variant="h6" sx={{ color: '#ff66b2', mt: 3 }}>Total Expenses: R{totalExpenses.toFixed(2)}</Typography>
+            <Typography variant="h6" sx={{ color: '#8e44ad', mt: 3 }}>Total Expenses: R{totalExpenses.toFixed(2)}</Typography>
           </Paper>
         </Grid>
       </Grid>
 
       <Grid container spacing={3} sx={{ mt: 3 }}>
         <Grid item xs={12}>
-          <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h6" sx={{ color: '#ff66b2' }}>Income List</Typography>
+          <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7' }}>
+            <Typography variant="h6" sx={{ color: '#8e44ad' }}>Income List</Typography>
             {incomeList.length > 0 ? (
               <ul>
                 {incomeList.map((income, index) => (
@@ -155,8 +155,8 @@ const IncomeExpenseTracker = () => {
           </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h6" sx={{ color: '#ff66b2' }}>Expense List</Typography>
+          <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7' }}>
+            <Typography variant="h6" sx={{ color: '#8e44ad' }}>Expense List</Typography>
             {expenseList.length > 0 ? (
               <ul>
                 {expenseList.map((expense, index) => (
@@ -172,7 +172,7 @@ const IncomeExpenseTracker = () => {
         </Grid>
       </Grid>
 
-      <Button onClick={handleClear} variant="outlined" sx={{ mt: 3, color: '#ff66b2', borderColor: '#ff66b2' }}>
+      <Button onClick={handleClear} variant="outlined" sx={{ mt: 3, color: '#8e44ad', borderColor: '#8e44ad', '&:hover': { borderColor: '#9b59b6' } }}>
         Clear All Entries
       </Button>
     </Container>

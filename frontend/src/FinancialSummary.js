@@ -55,7 +55,8 @@ const FinancialSummary = () => {
       Utilities: R${expenseBreakdown[2].amount.toFixed(2)}, 
       Entertainment: R${expenseBreakdown[3].amount.toFixed(2)}.
     `;
-
+    
+    console.log("Reading financial summary:", message); // Add this line to debug
     const utterance = new SpeechSynthesisUtterance(message);
     window.speechSynthesis.speak(utterance);
   };
@@ -67,7 +68,7 @@ const FinancialSummary = () => {
         <Grid item xs={12}>
           <Button 
             variant="contained" 
-            sx={{ backgroundColor: '#ff66b2', color: '#fff' }} 
+            sx={{ backgroundColor: '#8e44ad', color: '#fff', '&:hover': { backgroundColor: '#9b59b6' } }} 
             onClick={readFinancialSummary}
           >
             Hear Financial Summary
@@ -75,26 +76,26 @@ const FinancialSummary = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="h4" sx={{ color: '#ff66b2', mt: 3 }}>
+      <Typography variant="h4" sx={{ color: '#8e44ad', mt: 3 }}>
         Financial Summary
       </Typography>
 
       <Grid container spacing={3} sx={{ mt: 3 }}>
         <Grid item xs={12} sm={6} md={4}>
-          <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h6" sx={{ color: '#ff66b2' }}>Total Income</Typography>
+          <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7' }}>
+            <Typography variant="h6" sx={{ color: '#8e44ad' }}>Total Income</Typography>
             <Typography variant="h5">R{totalIncome.toFixed(2)}</Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h6" sx={{ color: '#ff66b2' }}>Total Expenses</Typography>
+          <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7' }}>
+            <Typography variant="h6" sx={{ color: '#8e44ad' }}>Total Expenses</Typography>
             <Typography variant="h5">R{totalExpenses.toFixed(2)}</Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h6" sx={{ color: '#ff66b2' }}>Savings</Typography>
+          <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7' }}>
+            <Typography variant="h6" sx={{ color: '#8e44ad' }}>Savings</Typography>
             <Typography variant="h5">R{savings.toFixed(2)}</Typography>
           </Paper>
         </Grid>
@@ -102,8 +103,8 @@ const FinancialSummary = () => {
 
       <Grid container spacing={3} sx={{ mt: 3 }}>
         <Grid item xs={12}>
-          <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h6" sx={{ color: '#ff66b2' }}>Expense Breakdown</Typography>
+          <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7' }}>
+            <Typography variant="h6" sx={{ color: '#8e44ad' }}>Expense Breakdown</Typography>
             {/* Set the width and height for the Pie chart */}
             <Pie data={pieData} options={{ responsive: true }} style={{ maxWidth: '300px', maxHeight: '300px' }} />
           </Paper>
@@ -112,8 +113,8 @@ const FinancialSummary = () => {
 
       <Grid container spacing={3} sx={{ mt: 3 }}>
         <Grid item xs={12}>
-          <Paper sx={{ padding: 3, backgroundColor: '#ffe6f0' }}>
-            <Typography variant="h6" sx={{ color: '#ff66b2' }}>Income Breakdown</Typography>
+          <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7' }}>
+            <Typography variant="h6" sx={{ color: '#8e44ad' }}>Income Breakdown</Typography>
             <ul>
               {incomeBreakdown.map((item, index) => (
                 <li key={index}>

@@ -38,18 +38,18 @@ const BudgetTracker = () => {
 
   return (
     <Container>
-      <Paper sx={{ padding: 3, backgroundColor: '#f3e5f5', borderRadius: 3 }}>
-        <Typography variant="h4" sx={{ color: '#ff66b2', mt: 3, textAlign: 'center' }}>
+      <Paper sx={{ padding: 3, backgroundColor: '#f0e5f7', borderRadius: 3 }}>
+        <Typography variant="h4" sx={{ color: '#8e44ad', mt: 3, textAlign: 'center' }}>
           Budget Tracker
         </Typography>
-        
+
         <TextField
           label="Item Name"
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
           sx={{ mt: 2, mr: 1, width: '45%' }}
         />
-        
+
         <TextField
           label="Amount"
           type="number"
@@ -57,15 +57,15 @@ const BudgetTracker = () => {
           onChange={(e) => setItemAmount(e.target.value)}
           sx={{ mt: 2, mr: 1, width: '45%' }}
         />
-        
+
         <Button
           variant="contained"
           sx={{
-            backgroundColor: '#ff66b2',
+            backgroundColor: '#8e44ad',
             color: '#fff',
             mt: 2,
             '&:hover': {
-              backgroundColor: '#ff3385',
+              backgroundColor: '#9b59b6',
             },
           }}
           onClick={handleAddItem}
@@ -73,7 +73,7 @@ const BudgetTracker = () => {
           Add Item
         </Button>
 
-        <Typography variant="h6" sx={{ mt: 3, textAlign: 'center' }}>
+        <Typography variant="h6" sx={{ mt: 3, textAlign: 'center', color: '#8e44ad' }}>
           Total Budget: R{totalBudget.toFixed(2)}
         </Typography>
 
@@ -83,7 +83,7 @@ const BudgetTracker = () => {
               <ListItemText primary={`${item.name} - R${item.amount.toFixed(2)}`} />
               <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(index)}>
-                  <DeleteIcon sx={{ color: '#ff66b2' }} />
+                  <DeleteIcon sx={{ color: '#8e44ad' }} />
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>
